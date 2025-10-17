@@ -60,7 +60,30 @@ O **Cenário 2** depende de dois serviços externos que precisam estar em execu�
 *   **API de Produtos Local:**
     *   O fluxo de trabalho faz uma requisição `GET` para `http://host.docker.internal:3000/produtos` para buscar o catálogo de produtos.
     *   `host.docker.internal` é um DNS especial que permite que o container do n8n (se você estiver usando Docker) acesse um serviço rodando na sua máquina local (host).
-    *   Você precisa ter uma API rodando na porta 3000 da sua máquina que retorne um JSON com a lista de produtos. Cada produto no JSON deve ter, no mínimo, os campos: `nome`, `descricao`, `preco` e `imagem_url`.
+    *   As instruções para rodar a API estão na seção abaixo.
+
+---
+
+### Como Rodar a API
+
+A API é uma aplicação Node.js simples que serve os dados dos produtos a partir de um arquivo JSON. Para rodá-la, siga os passos abaixo:
+
+1.  **Navegue até a pasta da API:**
+    ```bash
+    cd api
+    ```
+
+2.  **Instale as dependências:**
+    ```bash
+    npm install
+    ```
+
+3.  **Inicie a API:**
+    ```bash
+    node app.js
+    ```
+
+A API estará rodando na porta 3000.
 
 ---
 
