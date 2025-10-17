@@ -1,0 +1,181 @@
+{
+  "name": "Cenário 1",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        -64,
+        0
+      ],
+      "id": "ef95f6aa-23bd-4e00-bd37-df88c9a352c4",
+      "name": "Telegram Trigger",
+      "webhookId": "6771c54c-9a1c-49a5-a3cc-856347da856a",
+      "credentials": {
+        "telegramApi": {
+          "id": "F1XsbGDUdE1n66HV",
+          "name": "Telgram Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "Crie uma mensagem de boas-vindas calorosa. Apresente-se como Clô e pergunte de forma aberta como você pode ajudar a pessoa a encontrar o look perfeito hoje.",
+        "options": {
+          "systemMessage": "Você é a Clô, a assistente de estilo e anfitriã virtual da nossa loja de roupas. Sua personalidade é alegre, casual e muito prestativa, como se estivesse conversando com uma amiga que entende tudo de moda.\n\n- Use uma linguagem informal e acolhedora.\n- Use emojis (✨, 💖, 👚, etc.) para deixar a conversa mais leve e visual.\n- Seu objetivo principal é fazer com que a pessoa se sinta bem-vinda e ajudá-la a encontrar o que procura.\n- Mantenha as mensagens relativamente curtas e fáceis de ler."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 2.2,
+      "position": [
+        416,
+        0
+      ],
+      "id": "6ddb50ce-b6c3-4d25-9aba-f3370e5a2c66",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatGoogleGemini",
+      "typeVersion": 1,
+      "position": [
+        400,
+        160
+      ],
+      "id": "b4ff0f21-1d5b-4ec9-a033-ec4cea1d6974",
+      "name": "Google Gemini Chat Model",
+      "credentials": {
+        "googlePalmApi": {
+          "id": "uudgVexPy2IFFMaZ",
+          "name": "Google Gemini(PaLM) Api account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Edit Fields').item.json.chatId }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        736,
+        0
+      ],
+      "id": "d242bcf7-fbcf-48bc-b3ba-75bc324289fa",
+      "name": "Send a text message",
+      "webhookId": "2033b61c-3ba9-4e58-ac16-9b037e582370",
+      "credentials": {
+        "telegramApi": {
+          "id": "F1XsbGDUdE1n66HV",
+          "name": "Telgram Token"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cc12e10d-405c-4266-aa0c-541da84a2618",
+              "name": "chatId",
+              "value": "={{ $json.message.chat.id }}",
+              "type": "string"
+            },
+            {
+              "id": "30be9cff-40ad-4126-9021-3bab4d3af149",
+              "name": "message",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            },
+            {
+              "id": "e84115d4-fcca-4136-9a75-655639af4226",
+              "name": "from_Id",
+              "value": "={{ $json.message.from.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        176,
+        0
+      ],
+      "id": "98220034-01e1-4718-a64b-100f44c166e9",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Gemini Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "81ceb599-65eb-4176-9c40-f6ce7beb2361",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "44631d0647de0aaa5604bf85f80cdbc72ba3bba08c629494f91f6ce3dccc1ed5"
+  },
+  "id": "9R5LqPZO0t0aKatg",
+  "tags": []
+}
